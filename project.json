@@ -1,0 +1,8 @@
+{
+  "name": "Kidsharu-Lambda",
+  "description": "",
+  "memory": 128,
+  "timeout": 5,
+  "role": "arn:aws:iam::291624893035:role/Kidsharu-Lambda_lambda_function",
+  "environment": {}
+}
