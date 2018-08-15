@@ -1,8 +1,13 @@
 {
   "name": "Kidsharu-Lambda",
-  "description": "",
+  "description": ".",
   "memory": 128,
   "timeout": 5,
   "role": "arn:aws:iam::291624893035:role/Kidsharu-Lambda_lambda_function",
-  "environment": {}
+  "environment": {},
+  "runtime": "nodejs6.10",
+  "hooks": {
+    "build": "../../node_modules/.bin/webpack --mode development --config ../../webpack.config.js",
+    "clean": "rm index.js"
+  }
 }
