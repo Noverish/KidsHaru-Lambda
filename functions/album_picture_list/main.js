@@ -7,14 +7,14 @@ format.extend(String.prototype);
 
 exports.handle = function (e, ctx, cb) {
     const conn = mysql.createConnection(utils.mysql_config);
-    const params = utils.process_input_event(e, cb, ['album_id', 'picture_id']);
+    const params = utils.process_input_event(e, cb, ['album_id']);
     if (params == null)
         return;
 
-    get_picture();
+    get();
 
-    function get_picture() {
-        let sql = 'SELECT * FROM Picture WHERE album_id = \'{album_id}\' AND picture_id = \'{picture_id}\'';
+    function get() {
+        let sql = 'SELECT * FROM Picture WHERE album_id = \'{album_id}\'';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {
@@ -23,8 +23,8 @@ exports.handle = function (e, ctx, cb) {
                 return;
             }
 
-            let picture = picture_util.process_picture(results[0]);
-            response.end(cb, 200, picture, conn);
+            let picture_list = picture_util.process_picture_list(results);
+            response.end(cb, 200, picture_list, conn);
         });
     }
 };
