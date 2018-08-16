@@ -1,6 +1,6 @@
 const utils = require('../../utils/utils.js');
 const response = require('../../utils/response.js');
-const album = require('../../utils/album.js');
+const album_util = require('../../utils/album_util.js');
 const mysql = require('mysql');
 const format = require('string-format');
 format.extend(String.prototype);
@@ -41,9 +41,9 @@ exports.handle = function (e, ctx, cb) {
         });
     }
 
-    function insert2(inserted_album) {
+    function insert2(album) {
         let sql = 'INSERT INTO Teacher_Album (teacher_id, album_id) VALUES (\'{0.teacher_id}\', \'{1.album_id}\')';
-        sql = sql.format(params, inserted_album);
+        sql = sql.format(params, album);
 
         conn.query(sql, [], function (err, results, fields) {
             if (err) {
@@ -51,8 +51,8 @@ exports.handle = function (e, ctx, cb) {
                 return;
             }
 
-            inserted_album = album.process_album(inserted_album);
-            response.end(cb, 200, inserted_album, conn);
+            album = album_util.process_album(album);
+            response.end(cb, 200, album, conn);
         });
     }
 };

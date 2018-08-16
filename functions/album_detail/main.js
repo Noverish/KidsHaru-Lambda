@@ -1,6 +1,6 @@
 const utils = require('../../utils/utils.js');
 const response = require('../../utils/response.js');
-const album = require('../../utils/album.js');
+const album_util = require('../../utils/album_util.js');
 const mysql = require('mysql');
 const format = require('string-format');
 format.extend(String.prototype);
@@ -23,8 +23,8 @@ exports.handle = function (e, ctx, cb) {
                 return;
             }
 
-            let a = album.process_album(results[0]);
-            response.end(cb, 200, a, conn);
+            let album = album_util.process_album(results[0]);
+            response.end(cb, 200, album, conn);
         });
     }
 };
