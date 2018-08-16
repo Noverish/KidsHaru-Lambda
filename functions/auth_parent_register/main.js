@@ -18,7 +18,6 @@ exports.handle = function (e, ctx, cb) {
 
         let sql = "INSERT INTO Parent (id, password) VALUES ('{id}', '{password}')";
         sql = sql.format(params);
-        console.log(sql);
 
         conn.query(sql, [], function (err, results, fields) {
             if (err) {

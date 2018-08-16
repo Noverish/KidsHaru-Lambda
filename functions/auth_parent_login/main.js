@@ -16,7 +16,7 @@ exports.handle = function (e, ctx, cb) {
     function connect(params) {
         const conn = mysql.createConnection(utils.mysql_config);
 
-        let sql = "INSERT INTO Teacher (name, id, password) VALUES ('{name}', '{id}', '{password}')";
+        let sql = "SELECT * FROM Parent WHERE id LIKE '{id}' AND password LIKE '{password}'";
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {
@@ -25,7 +25,11 @@ exports.handle = function (e, ctx, cb) {
                 return;
             }
 
-            cb(null, utils.create_response(200, { access_token: '1234' }));
+            if (results.length === 0) {
+                cb(null, utils.create_response(404, 'Invalid ID or password'));
+            } else {
+                cb(null, utils.create_response(200, { access_token: '1234' }));
+            }
         });
 
         conn.end();
