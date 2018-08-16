@@ -27,7 +27,6 @@ exports.handle = function (e, ctx, cb) {
             }
 
             results = album.process_album_list(results);
-
             response.end(cb, 200, results, conn);
         });
     }
