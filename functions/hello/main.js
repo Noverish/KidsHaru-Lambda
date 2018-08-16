@@ -1,6 +1,7 @@
+const util = require('../../utils.js');
 // var mysql = require('mysql');
 
-exports.handle = function(e, ctx, cb) {
+exports.handle = function (e, ctx, cb) {
     // var config = {
     //     host: "kidsharu.c1nddfwgbi25.ap-northeast-2.rds.amazonaws.com",
     //     user: "kidsharu",
@@ -17,12 +18,12 @@ exports.handle = function(e, ctx, cb) {
     //         cb(null, error);
     //         return;   
     //     }
-        
+
     //     cb(null, 'success');
     //   });
 
     // conn.end();
 
-    
-    cb(null, { e: e, ctx: ctx });
+
+    cb(null, util.create_response(200, { e: e, ctx: ctx }));
 };

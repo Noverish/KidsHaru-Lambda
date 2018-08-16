@@ -1,4 +1,3 @@
-// NOTE: paths are relative to each functions folder
 const path = require('path');
 const webpack = require('webpack');
 
