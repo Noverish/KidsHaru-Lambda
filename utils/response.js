@@ -22,6 +22,12 @@ exports.end = function (cb, statusCode, body, conn) {
             body: JSON.stringify(body),
             headers: { 'Content-Type': 'application/json' }
         };
+    } else if (statusCode === 204) {
+        response = {
+            statusCode: statusCode,
+            body: null,
+            headers: { 'Content-Type': 'application/json' }
+        };
     } else {
         let tmp = {
             msg: messageMap[statusCode] + ' - ' + body
