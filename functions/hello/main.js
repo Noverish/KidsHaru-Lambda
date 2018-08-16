@@ -1,4 +1,4 @@
-const util = require('../../utils.js');
+const util = require('../../utils/utils.js');
 // var mysql = require('mysql');
 
 exports.handle = function (e, ctx, cb) {

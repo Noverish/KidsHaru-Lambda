@@ -1,37 +1,37 @@
-const utils = require('../../utils.js');
+const utils = require('../../utils/utils.js');
+const response = require('../../utils/response');
+const jwt = require('../../utils/jwt.js');
 const mysql = require('mysql');
 const format = require('string-format');
 format.extend(String.prototype);
 
 exports.handle = function (e, ctx, cb) {
-    utils.process_input_event(e, function (params, err) {
-        if (err) {
-            cb(null, err);
-            return;
-        }
+    const conn = mysql.createConnection(utils.mysql_config);
+    const params = utils.process_input_event(e, cb, ['id', 'password']);
+    if (params == null)
+        return;
 
-        connect(params);
-    });
+    check();
 
-    function connect(params) {
-        const conn = mysql.createConnection(utils.mysql_config);
-
-        let sql = "SELECT * FROM Teacher WHERE id LIKE '{id}' AND password LIKE '{password}'";
+    function check() {
+        let sql = 'SELECT teacher_id FROM Teacher WHERE id LIKE \'{id}\' AND password LIKE \'{password}\'';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {
             if (err) {
-                cb(null, utils.create_response(500, err));
+                response.end(cb, 500, err, conn);
                 return;
             }
 
             if (results.length === 0) {
-                cb(null, utils.create_response(404, 'Invalid ID or password'));
+                response.end(cb, 404, 'Invalid ID or password', conn);
             } else {
-                cb(null, utils.create_response(200, { access_token: '1234' }));
+                const teacher_id = results[0]['teacher_id'];
+                const access_token = jwt.generate_token({ teacher_id: teacher_id });
+                const payload = { access_token: access_token };
+
+                response.end(cb, 200, payload, conn);
             }
         });
-
-        conn.end();
     }
 };

@@ -1,33 +1,65 @@
-const utils = require('../../utils.js');
+const utils = require('../../utils/utils.js');
+const response = require('../../utils/response');
+const jwt = require('../../utils/jwt.js');
 const mysql = require('mysql');
 const format = require('string-format');
 format.extend(String.prototype);
 
 exports.handle = function (e, ctx, cb) {
-    utils.process_input_event(e, function (params, err) {
-        if (err) {
-            cb(null, err);
-            return;
-        }
+    const conn = mysql.createConnection(utils.mysql_config);
+    const params = utils.process_input_event(e, cb, ['id', 'password']);
+    if (params == null)
+        return;
 
-        connect(params);
-    });
+    check_already_exist();
 
-    function connect(params) {
-        const conn = mysql.createConnection(utils.mysql_config);
-
-        let sql = "INSERT INTO Parent (id, password) VALUES ('{id}', '{password}')";
+    function check_already_exist() {
+        let sql = 'SELECT id FROM Parent WHERE id LIKE \'{id}\'';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {
             if (err) {
-                cb(null, utils.create_response(500, err));
+                response.end(cb, 500, err, conn);
                 return;
             }
 
-            cb(null, utils.create_response(200, { access_token: '1234' }));
+            if (results.length === 0) {
+                insert();
+            } else {
+                response.end(cb, 409, 'Already Exist ID', conn);
+            }
         });
+    }
 
-        conn.end();
+    function insert() {
+        let sql = 'INSERT INTO Parent (id, password) VALUES (\'{id}\', \'{password}\')';
+        sql = sql.format(params);
+
+        conn.query(sql, [], function (err, results, fields) {
+            if (err) {
+                response.end(cb, 500, err, conn);
+                return;
+            }
+
+            generate_access_token();
+        });
+    }
+
+    function generate_access_token() {
+        let sql = 'SELECT parent_id FROM Parent WHERE id LIKE \'{id}\'';
+        sql = sql.format(params);
+
+        conn.query(sql, [], function (err, results, fields) {
+            if (err) {
+                response.end(cb, 500, err, conn);
+                return;
+            }
+
+            const parent_id = results[0]['parent_id'];
+            const access_token = jwt.generate_token({ parent_id: parent_id });
+            const payload = { access_token: access_token };
+
+            response.end(cb, 200, payload, conn);
+        });
     }
 };
