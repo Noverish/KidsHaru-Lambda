@@ -13,8 +13,6 @@ exports.mysql_config = {
     }
 };
 
-exports.album_bucket_path = 'https://s3.ap-northeast-2.amazonaws.com/kidsharu-album/';
-
 exports.process_input_event = function (e, cb, keys) {
     let params = exports.integrate_params(e);
     if (params == null) {

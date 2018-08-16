@@ -1,5 +1,5 @@
 const utils = require('../../utils/utils.js');
-const response = require('../../utils/response');
+const response = require('../../utils/response.js');
 const jwt = require('../../utils/jwt.js');
 const mysql = require('mysql');
 const format = require('string-format');
