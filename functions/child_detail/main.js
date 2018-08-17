@@ -22,7 +22,11 @@ exports.handle = function (e, ctx, cb) {
                 return;
             }
 
-            response.end(cb, 200, results[0], conn);
+            if (results.length === 0) {
+                response.end(cb, 404, null, conn);
+            } else {
+                response.end(cb, 200, results[0], conn);
+            }
         });
     }
 };

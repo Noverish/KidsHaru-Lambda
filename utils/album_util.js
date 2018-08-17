@@ -1,3 +1,5 @@
+const response = require('./response.js');
+
 exports.album_bucket_path = 'https://s3.ap-northeast-2.amazonaws.com/kidsharu-album';
 exports.album_noimage_path = 'https://s3.ap-northeast-2.amazonaws.com/kidsharu-album/no-image.png';
 
@@ -17,4 +19,22 @@ exports.process_album = function (album) {
     }
 
     return album;
+};
+
+exports.check_album_exist = function (album_id, conn, cb, callback) {
+    let sql = 'SELECT album_id FROM Album WHERE album_id = \'{}\'';
+    sql = sql.format(album_id);
+
+    conn.query(sql, [], function (err, results, fields) {
+        if (err) {
+            response.end(cb, 500, err, conn);
+            return;
+        }
+
+        if (results.length === 0) {
+            response.end(cb, 404, null, conn);
+        } else {
+            callback();
+        }
+    });
 };

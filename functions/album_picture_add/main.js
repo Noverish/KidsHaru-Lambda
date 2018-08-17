@@ -1,5 +1,6 @@
 const utils = require('../../utils/utils.js');
 const response = require('../../utils/response.js');
+const album_util = require('../../utils/album_util.js');
 const mysql = require('mysql');
 const format = require('string-format');
 format.extend(String.prototype);
@@ -10,7 +11,9 @@ exports.handle = function (e, ctx, cb) {
     if (params == null)
         return;
 
-    get_max_picture_id();
+    album_util.check_album_exist(params['album_id'], conn, cb, function () {
+        get_max_picture_id();
+    });
 
     function get_max_picture_id() {
         let sql = 'SELECT MAX(picture_id) AS max FROM Picture WHERE album_id = \'{album_id}\'';

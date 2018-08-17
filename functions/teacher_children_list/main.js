@@ -1,5 +1,6 @@
 const utils = require('../../utils/utils.js');
 const response = require('../../utils/response.js');
+const teacher_util = require('../../utils/teacher_util.js');
 const mysql = require('mysql');
 const format = require('string-format');
 format.extend(String.prototype);
@@ -10,7 +11,9 @@ exports.handle = function (e, ctx, cb) {
     if (params == null)
         return;
 
-    get();
+    teacher_util.check_teacher_exist(params['teacher_id'], conn, cb, function () {
+        get();
+    });
 
     function get() {
         let sql =

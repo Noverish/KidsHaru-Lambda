@@ -1,5 +1,6 @@
 const utils = require('../../utils/utils.js');
 const response = require('../../utils/response.js');
+const child_util = require('../../utils/child_util.js');
 const mysql = require('mysql');
 const format = require('string-format');
 format.extend(String.prototype);
@@ -10,25 +11,9 @@ exports.handle = function (e, ctx, cb) {
     if (params == null)
         return;
 
-    check();
-
-    function check() {
-        let sql = 'SELECT child_id FROM Child WHERE child_id = \'{child_id}\'';
-        sql = sql.format(params);
-
-        conn.query(sql, [], function (err, results, fields) {
-            if (err) {
-                response.end(cb, 500, err, conn);
-                return;
-            }
-
-            if (results.length === 0) {
-                response.end(cb, 404, null, conn);
-            } else {
-                del1();
-            }
-        });
-    }
+    child_util.check_child_exist(params['child_id'], conn, cb, function () {
+        del1();
+    });
 
     function del1() {
         let sql = 'DELETE FROM Teacher_Child WHERE child_id = \'{child_id}\'';

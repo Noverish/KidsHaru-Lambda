@@ -23,8 +23,12 @@ exports.handle = function (e, ctx, cb) {
                 return;
             }
 
-            let album = album_util.process_album(results[0]);
-            response.end(cb, 200, album, conn);
+            if (results.length === 0) {
+                response.end(cb, 404, null, conn);
+            } else {
+                let album = album_util.process_album(results[0]);
+                response.end(cb, 200, album, conn);
+            }
         });
     }
 };

@@ -11,9 +11,9 @@ exports.handle = function (e, ctx, cb) {
     if (params == null)
         return;
 
-    get_picture();
+    get();
 
-    function get_picture() {
+    function get() {
         let sql = 'SELECT * FROM Picture WHERE album_id = \'{album_id}\' AND picture_id = \'{picture_id}\'';
         sql = sql.format(params);
 
@@ -23,8 +23,12 @@ exports.handle = function (e, ctx, cb) {
                 return;
             }
 
-            let picture = picture_util.process_picture(results[0]);
-            response.end(cb, 200, picture, conn);
+            if (results.length === 0) {
+                response.end(cb, 404, null, conn);
+            } else {
+                let picture = picture_util.process_picture(results[0]);
+                response.end(cb, 200, picture, conn);
+            }
         });
     }
 };

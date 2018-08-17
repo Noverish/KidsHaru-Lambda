@@ -1,5 +1,6 @@
 const utils = require('../../utils/utils.js');
 const response = require('../../utils/response.js');
+const album_util = require('../../utils/album_util.js');
 const picture_util = require('../../utils/picture_util.js');
 const mysql = require('mysql');
 const format = require('string-format');
@@ -11,7 +12,9 @@ exports.handle = function (e, ctx, cb) {
     if (params == null)
         return;
 
-    get();
+    album_util.check_album_exist(params['album_id'], conn, cb, function () {
+        get();
+    });
 
     function get() {
         let sql = 'SELECT * FROM Picture WHERE album_id = \'{album_id}\'';
