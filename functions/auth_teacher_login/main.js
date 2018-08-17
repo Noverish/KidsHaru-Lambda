@@ -24,7 +24,7 @@ exports.handle = function (e, ctx, cb) {
             }
 
             if (results.length === 0) {
-                response.end(cb, 404, 'Invalid ID or password', conn);
+                response.end(cb, 404, null, conn);
             } else {
                 const teacher_id = results[0]['teacher_id'];
                 const access_token = jwt.generate_token({ teacher_id: teacher_id });

@@ -24,7 +24,7 @@ exports.handle = function (e, ctx, cb) {
             }
 
             if (results.length === 0) {
-                response.end(cb, 404, 'Invalid ID or password', conn);
+                response.end(cb, 404, null, conn);
             } else {
                 const parent_id = results[0]['parent_id'];
                 const access_token = jwt.generate_token({ parent_id: parent_id });

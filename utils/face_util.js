@@ -13,9 +13,9 @@ exports.check_face_exist = function (album_id, picture_id, child_id, conn, cb, c
         }
 
         if (results.length === 0) {
-            response.end(cb, 404, null, conn);
+            callback(false);
         } else {
-            callback();
+            callback(true);
         }
     });
 };

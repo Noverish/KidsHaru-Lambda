@@ -26,7 +26,7 @@ exports.handle = function (e, ctx, cb) {
             if (results.length === 0) {
                 insert();
             } else {
-                response.end(cb, 409, 'Already Exist ID', conn);
+                response.end(cb, 409, null, conn);
             }
         });
     }

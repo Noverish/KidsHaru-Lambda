@@ -11,9 +11,21 @@ exports.handle = function (e, ctx, cb) {
     if (params == null)
         return;
 
-    face_util.check_face_exist(params['album_id'], params['picture_id'], params['child_id'], conn, cb, function () {
-        update();
+    face_util.check_face_exist(params['album_id'], params['picture_id'], params['child_id'], conn, cb, function (is_exist) {
+        if (is_exist)
+            check();
+        else
+            response.end(cb, 404, null, conn);
     });
+
+    function check() {
+        face_util.check_face_exist(params['album_id'], params['picture_id'], params['new_child_id'], conn, cb, function (is_exist) {
+            if (is_exist)
+                response.end(cb, 409, null, conn);
+            else
+                update();
+        });
+    }
 
     function update() {
         let sql_parts = [];

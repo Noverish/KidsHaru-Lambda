@@ -11,8 +11,11 @@ exports.handle = function (e, ctx, cb) {
     if (params == null)
         return;
 
-    face_util.check_face_exist(params['album_id'], params['picture_id'], params['child_id'], conn, cb, function() {
-        del1();
+    face_util.check_face_exist(params['album_id'], params['picture_id'], params['child_id'], conn, cb, function (is_exist) {
+        if (is_exist)
+            del1();
+        else
+            response.end(cb, 404, null, conn);
     });
 
     function del1() {

@@ -25,7 +25,7 @@ exports.end = function (cb, statusCode, body, conn) {
         response.body = JSON.stringify(body);
     } else if (statusCode === 204) {
         response.body = null;
-    } else if (statusCode === 404) {
+    } else if (statusCode === 404 || statusCode === 409) {
         response.body = JSON.stringify({ msg: messageMap[statusCode] })
     } else {
         response.body = JSON.stringify({ msg: messageMap[statusCode] + ' - ' + body })

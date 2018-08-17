@@ -30,7 +30,7 @@ exports.handle = function (e, ctx, cb) {
             if (results.length === 0) {
                 insert1();
             } else {
-                response.end(cb, 409, 'Already Exist', conn);
+                response.end(cb, 409, null, conn);
             }
         });
     }

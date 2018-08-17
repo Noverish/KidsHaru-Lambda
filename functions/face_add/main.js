@@ -1,6 +1,7 @@
 const utils = require('../../utils/utils.js');
 const response = require('../../utils/response.js');
 const picture_util = require('../../utils/picture_util.js');
+const face_util = require('../../utils/face_util.js');
 const mysql = require('mysql');
 const format = require('string-format');
 format.extend(String.prototype);
@@ -12,8 +13,17 @@ exports.handle = function (e, ctx, cb) {
         return;
 
     picture_util.check_picture_exist(params['album_id'], params['picture_id'], conn, cb, function () {
-        insert1();
+        check();
     });
+
+    function check() {
+        face_util.check_face_exist(params['album_id'], params['picture_id'], params['child_id'], conn, cb, function (is_exist) {
+            if (is_exist)
+                response.end(cb, 409, null, conn);
+            else
+                insert1();
+        });
+    }
 
     function insert1() {
         let sql =
