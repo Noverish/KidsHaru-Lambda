@@ -6,14 +6,16 @@ format.extend(String.prototype);
 
 exports.handle = function (e, ctx, cb) {
     const conn = mysql.createConnection(utils.mysql_config);
-    const params = utils.process_input_event(e, cb, ['child_id']);
+    const params = utils.process_input_event(e, cb, ['album_id', 'picture_id']);
     if (params == null)
         return;
 
     check();
 
     function check() {
-        let sql = 'SELECT child_id FROM Child WHERE child_id = \'{child_id}\'';
+        let sql =
+            'SELECT album_id, picture_id FROM Picture ' +
+            'WHERE album_id = \'{album_id}\' AND picture_id = \'{picture_id}\'';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {
@@ -25,29 +27,29 @@ exports.handle = function (e, ctx, cb) {
             if (results.length === 0) {
                 response.end(cb, 404, null, conn);
             } else {
-                update();
+                del1();
             }
         });
     }
 
-    function update() {
-        let sql_parts = [];
+    function del1() {
+        let sql = 'DELETE FROM Face WHERE album_id = \'{album_id}\' AND picture_id = \'{picture_id}\'';
+        sql = sql.format(params);
 
-        if (params.hasOwnProperty('name'))
-            sql_parts.push('name = \'{name}\''.format(params));
+        conn.query(sql, [], function (err, results, fields) {
+            if (err) {
+                response.end(cb, 500, err, conn);
+                return;
+            }
 
-        if (params.hasOwnProperty('contact'))
-            sql_parts.push('contact = \'{contact}\''.format(params));
+            del2();
+        });
+    }
 
-        if (sql_parts.length === 0) {
-            response.end(cb, 204, null, conn);
-            return;
-        }
+    function del2() {
+        let sql = 'DELETE FROM Picture WHERE album_id = \'{album_id}\' AND picture_id = \'{picture_id}\'';
+        sql = sql.format(params);
 
-        let sql = 'UPDATE Child SET {0} WHERE child_id = \'{1.child_id}\'';
-        sql = sql.format(sql_parts.join(), params);
-
-        console.log(sql);
         conn.query(sql, [], function (err, results, fields) {
             if (err) {
                 response.end(cb, 500, err, conn);

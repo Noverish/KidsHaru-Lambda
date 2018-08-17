@@ -10,7 +10,25 @@ exports.handle = function (e, ctx, cb) {
     if (params == null)
         return;
 
-    update();
+    check();
+
+    function check() {
+        let sql = 'SELECT album_id FROM Album WHERE album_id = \'{album_id}\'';
+        sql = sql.format(params);
+
+        conn.query(sql, [], function (err, results, fields) {
+            if (err) {
+                response.end(cb, 500, err, conn);
+                return;
+            }
+
+            if (results.length === 0) {
+                response.end(cb, 404, null, conn);
+            } else {
+                update();
+            }
+        });
+    }
 
     function update() {
         let sql_parts = [];
@@ -26,7 +44,8 @@ exports.handle = function (e, ctx, cb) {
             return;
         }
 
-        let sql = 'UPDATE Album SET {0} WHERE album_id = \'{1.album_id}\''.format(sql_parts.join(), params);
+        let sql = 'UPDATE Album SET {0} WHERE album_id = \'{1.album_id}\'';
+        sql = sql.format(sql_parts.join(), params);
 
         console.log(sql);
         conn.query(sql, [], function (err, results, fields) {

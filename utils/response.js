@@ -15,29 +15,20 @@ exports.end = function (cb, statusCode, body, conn) {
         conn.end();
     }
 
-    let response = null;
-    if (statusCode === 200) {
-        response = {
-            statusCode: statusCode,
-            body: JSON.stringify(body),
-            headers: { 'Content-Type': 'application/json' }
-        };
-    } else if (statusCode === 204) {
-        response = {
-            statusCode: statusCode,
-            body: null,
-            headers: { 'Content-Type': 'application/json' }
-        };
-    } else {
-        let tmp = {
-            msg: messageMap[statusCode] + ' - ' + body
-        };
+    let response = {
+        statusCode: statusCode,
+        body: null,
+        headers: { 'Content-Type': 'application/json' }
+    };
 
-        response = {
-            statusCode: statusCode,
-            body: JSON.stringify(tmp),
-            headers: { 'Content-Type': 'application/json' }
-        };
+    if (statusCode === 200) {
+        response.body = JSON.stringify(body);
+    } else if (statusCode === 204) {
+        response.body = null;
+    } else if (statusCode === 404) {
+        response.body = JSON.stringify({ msg: messageMap[statusCode] })
+    } else {
+        response.body = JSON.stringify({ msg: messageMap[statusCode] + ' - ' + body })
     }
 
     cb(null, response);

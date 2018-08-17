@@ -23,7 +23,7 @@ exports.handle = function (e, ctx, cb) {
             }
 
             if (results.length === 0) {
-                response.end(cb, 404, 'There is no child_id which is {child_id} in database'.format(params), conn);
+                response.end(cb, 404, null, conn);
             } else {
                 del1();
             }
@@ -45,6 +45,20 @@ exports.handle = function (e, ctx, cb) {
     }
 
     function del2() {
+        let sql = 'DELETE FROM Parent_Child WHERE child_id = \'{child_id}\'';
+        sql = sql.format(params);
+
+        conn.query(sql, [], function (err, results, fields) {
+            if (err) {
+                response.end(cb, 500, err, conn);
+                return;
+            }
+
+            del3();
+        });
+    }
+
+    function del3() {
         let sql = 'DELETE FROM Child WHERE child_id = \'{child_id}\'';
         sql = sql.format(params);
 
