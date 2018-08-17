@@ -29,19 +29,30 @@ exports.process_input_event = function (e, cb, keys) {
     return params;
 };
 
-exports.integrate_params = function(e) {
+exports.integrate_params = function (e) {
+    let body = JSON.parse(e['body']);
+    let query = e['queryStringParameters'];
+    let path = e['pathParameters'];
+
+    if (body != null && path != null) {
+        if (body.hasOwnProperty('child_id') && path.hasOwnProperty('child_id')) {
+            body['new_child_id'] = body['child_id'];
+            delete body['child_id']
+        }
+    }
+
     let params = {};
     try {
-        Object.assign(params, JSON.parse(e['body']));
-        Object.assign(params, e['queryStringParameters']);
-        Object.assign(params, e['pathParameters']);
+        Object.assign(params, body);
+        Object.assign(params, query);
+        Object.assign(params, path);
         return params;
     } catch (err) {
         return null;
     }
-}
+};
 
-exports.check_missing_param = function(params, keys) {
+exports.check_missing_param = function (params, keys) {
     for (let i = 0; i < keys.length; i++) {
         let key = keys[i];
         if (!params.hasOwnProperty(key)) {
@@ -49,4 +60,4 @@ exports.check_missing_param = function(params, keys) {
         }
     }
     return null;
-}
+};

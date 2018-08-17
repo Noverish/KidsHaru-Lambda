@@ -1,6 +1,6 @@
 const utils = require('../../utils/utils.js');
 const response = require('../../utils/response.js');
-const picture_util = require('../../utils/picture_util.js');
+const face_util = require('../../utils/face_util.js');
 const mysql = require('mysql');
 const format = require('string-format');
 format.extend(String.prototype);
@@ -11,23 +11,15 @@ exports.handle = function (e, ctx, cb) {
     if (params == null)
         return;
 
-    picture_util.check_picture_exist(params['album_id'], params['picture_id'], conn, cb, function () {
-        update();
+    face_util.check_face_exist(params['album_id'], params['picture_id'], params['child_id'], conn, cb, function() {
+        del1();
     });
 
-    function update() {
-        let sql_parts = [];
-
-        if (params.hasOwnProperty('file_name'))
-            sql_parts.push('name = \'{file_name}\''.format(params));
-
-        if (sql_parts.length === 0) {
-            response.end(cb, 204, null, conn);
-            return;
-        }
-
-        let sql = 'UPDATE Picture SET {0} WHERE album_id = \'{1.album_id}\' AND picture_id = \'{1.picture_id}\'';
-        sql = sql.format(sql_parts.join(), params);
+    function del1() {
+        let sql =
+            'DELETE FROM Face WHERE ' +
+            'album_id = \'{album_id}\' AND picture_id = \'{picture_id}\' AND child_id = \'{child_id}\'';
+        sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {
             if (err) {

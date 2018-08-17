@@ -12,22 +12,12 @@ exports.handle = function (e, ctx, cb) {
         return;
 
     picture_util.check_picture_exist(params['album_id'], params['picture_id'], conn, cb, function () {
-        update();
+        get();
     });
 
-    function update() {
-        let sql_parts = [];
-
-        if (params.hasOwnProperty('file_name'))
-            sql_parts.push('name = \'{file_name}\''.format(params));
-
-        if (sql_parts.length === 0) {
-            response.end(cb, 204, null, conn);
-            return;
-        }
-
-        let sql = 'UPDATE Picture SET {0} WHERE album_id = \'{1.album_id}\' AND picture_id = \'{1.picture_id}\'';
-        sql = sql.format(sql_parts.join(), params);
+    function get() {
+        let sql = 'SELECT * FROM Face WHERE album_id = \'{album_id}\' AND picture_id = \'{picture_id}\'';
+        sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {
             if (err) {
@@ -35,7 +25,7 @@ exports.handle = function (e, ctx, cb) {
                 return;
             }
 
-            response.end(cb, 204, null, conn);
+            response.end(cb, 200, results, conn);
         });
     }
 };

@@ -32,7 +32,6 @@ exports.handle = function (e, ctx, cb) {
         let sql = 'UPDATE Child SET {0} WHERE child_id = \'{1.child_id}\'';
         sql = sql.format(sql_parts.join(), params);
 
-        console.log(sql);
         conn.query(sql, [], function (err, results, fields) {
             if (err) {
                 response.end(cb, 500, err, conn);
