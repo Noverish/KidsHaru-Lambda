@@ -1,6 +1,7 @@
 .idea/
 .DS_Store
 event.json
+credential.js
 
 # Created by https://www.gitignore.io/api/node,webstorm+iml
 
