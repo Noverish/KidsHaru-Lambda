@@ -11,6 +11,8 @@ exports.handle = function (e, ctx, cb) {
     if (params == null)
         return;
 
+    params['password'] = params['password'].toUpperCase();
+
     check();
 
     function check() {
