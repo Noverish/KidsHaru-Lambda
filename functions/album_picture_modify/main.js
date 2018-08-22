@@ -21,6 +21,9 @@ exports.handle = function (e, ctx, cb) {
         if (params.hasOwnProperty('file_name'))
             sql_parts.push('name = \'{file_name}\''.format(params));
 
+        if (params.hasOwnProperty('status'))
+            sql_parts.push('status = \'{status}\''.format(params));
+
         if (sql_parts.length === 0) {
             response.end(cb, 204, null, conn);
             return;
