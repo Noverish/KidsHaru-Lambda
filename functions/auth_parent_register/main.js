@@ -59,7 +59,7 @@ exports.handle = function (e, ctx, cb) {
 
             const parent_id = results[0]['parent_id'];
             const access_token = jwt.generate_token({ parent_id: parent_id });
-            const payload = { access_token: access_token };
+            const payload = { access_token: access_token, parent_id: parent_id };
 
             response.end(cb, 200, payload, conn);
         });

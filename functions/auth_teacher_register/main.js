@@ -59,7 +59,7 @@ exports.handle = function (e, ctx, cb) {
 
             const teacher_id = results[0]['teacher_id'];
             const access_token = jwt.generate_token({ teacher_id: teacher_id });
-            const payload = { access_token: access_token };
+            const payload = { access_token: access_token, teacher_id: teacher_id };
 
             response.end(cb, 200, payload, conn);
         });
