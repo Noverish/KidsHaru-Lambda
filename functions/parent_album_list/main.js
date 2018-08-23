@@ -1,25 +1,26 @@
 const utils = require('../../utils/utils.js');
 const response = require('../../utils/response.js');
-const teacher_util = require('../../utils/teacher_util.js');
+const album_util = require('../../utils/album_util.js');
+const parent_util = require('../../utils/parent_util.js');
 const mysql = require('mysql');
 const format = require('string-format');
 format.extend(String.prototype);
 
 exports.handle = function (e, ctx, cb) {
     const conn = mysql.createConnection(utils.mysql_config);
-    const params = utils.process_input_event(e, cb, ['teacher_id']);
+    const params = utils.process_input_event(e, cb, ['parent_id']);
     if (params == null)
         return;
 
-    teacher_util.check_teacher_exist(params['teacher_id'], conn, cb, function () {
+    parent_util.check_parent_exist(params['parent_id'], conn, cb, function () {
         get();
     });
 
     function get() {
         let sql =
-            'SELECT Child.* FROM Teacher_Child ' +
-            'INNER JOIN Child ON Teacher_Child.child_id = Child.child_id ' +
-            'WHERE Teacher_Child.teacher_id = \'{teacher_id}\'';
+            'SELECT Album.* FROM Parent_Album ' +
+            'INNER JOIN Album ON Parent_Album.album_id = Album.album_id ' +
+            'WHERE Parent_Album.parent_id = \'{parent_id}\'';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {
@@ -28,7 +29,8 @@ exports.handle = function (e, ctx, cb) {
                 return;
             }
 
-            response.end(cb, 200, results, conn);
+            let album_list = album_util.process_album_list(results);
+            response.end(cb, 200, album_list, conn);
         });
     }
 };

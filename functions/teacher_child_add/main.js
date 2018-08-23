@@ -1,6 +1,7 @@
 const utils = require('../../utils/utils.js');
 const response = require('../../utils/response.js');
 const teacher_util = require('../../utils/teacher_util.js');
+const child_util = require('../../utils/child_util.js');
 const mysql = require('mysql');
 const format = require('string-format');
 format.extend(String.prototype);
@@ -73,6 +74,7 @@ exports.handle = function (e, ctx, cb) {
                 return;
             }
 
+            child = child_util.process_child(child);
             response.end(cb, 200, child, conn);
         });
     }
