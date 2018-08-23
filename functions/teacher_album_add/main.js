@@ -17,7 +17,7 @@ exports.handle = function (e, ctx, cb) {
     });
 
     function insert1() {
-        let sql = 'INSERT INTO Album (title, content) VALUES (\'{title}\', \'{content}\')';
+        let sql = 'INSERT INTO Album (title, content, date) VALUES (\'{title}\', \'{content}\', NOW())';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {
