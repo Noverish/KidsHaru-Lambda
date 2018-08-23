@@ -1,6 +1,7 @@
 const utils = require('../../utils/utils.js');
 const response = require('../../utils/response.js');
 const album_util = require('../../utils/album_util.js');
+const picture_util = require('../../utils/picture_util.js');
 const mysql = require('mysql');
 const format = require('string-format');
 format.extend(String.prototype);
@@ -12,7 +13,11 @@ exports.handle = function (e, ctx, cb) {
         return;
 
     album_util.check_album_exist(params['album_id'], conn, cb, function () {
-        get_max_picture_id();
+        if (params.hasOwnProperty('picture_id')) {
+            insert1();
+        } else {
+            get_max_picture_id();
+        }
     });
 
     function get_max_picture_id() {
@@ -25,13 +30,13 @@ exports.handle = function (e, ctx, cb) {
                 return;
             }
 
-            params.next_picture_id = results[0]['max'] + 1;
+            params.picture_id = results[0]['max'] + 1;
             insert1();
         });
     }
 
     function insert1() {
-        let sql = 'INSERT INTO Picture (album_id, picture_id, name) VALUES (\'{album_id}\', \'{next_picture_id}\', \'{file_name}\')';
+        let sql = 'INSERT INTO Picture (album_id, picture_id, file_name) VALUES (\'{album_id}\', \'{picture_id}\', \'{file_name}\')';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {
@@ -45,7 +50,7 @@ exports.handle = function (e, ctx, cb) {
     }
 
     function get_inserted() {
-        let sql = 'SELECT * FROM Picture WHERE album_id = \'{album_id}\' AND picture_id = \'{next_picture_id}\'';
+        let sql = 'SELECT * FROM Picture WHERE album_id = \'{album_id}\' AND picture_id = \'{picture_id}\'';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {
@@ -54,7 +59,8 @@ exports.handle = function (e, ctx, cb) {
                 return;
             }
 
-            response.end(cb, 200, results[0], conn);
+            let picture = picture_util.process_picture(results[0]);
+            response.end(cb, 200, picture, conn);
         });
     }
 };

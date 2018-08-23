@@ -10,7 +10,7 @@ exports.process_picture_list = function (picture_list) {
 };
 
 exports.process_picture = function (picture) {
-    picture.picture_url = album_util.album_bucket_path + '/' + picture['album_id'] + '/' + picture.name;
+    picture.picture_url = album_util.album_bucket_path + '/' + picture['album_id'] + '/' + picture['file_name'];
 
     delete picture.name;
 
