@@ -12,13 +12,11 @@ exports.process_child_list = function (child_list) {
 };
 
 exports.process_child = function (child) {
-    if (child['profile_file_name'] == null) {
-        child['profile_img_url'] = exports.child_noprofile_path
+    if (child['profile_img'] == null) {
+        child['profile_img'] = exports.child_noprofile_path
     } else {
-        child['profile_img_url'] = exports.child_bucket_path + '/' + child['child_id'] + '/' + child['profile_file_name'];
+        child['profile_img'] = exports.child_bucket_path + '/' + child['child_id'] + '/' + child['profile_img'];
     }
-
-    delete child['profile_file_name'];
 
     return child;
 };
