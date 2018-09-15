@@ -16,7 +16,10 @@ exports.handle = function (e, ctx, cb) {
     check_already_exist();
 
     function check_already_exist() {
-        let sql = 'SELECT id FROM Parent WHERE id LIKE \'{id}\'';
+        let sql =
+            'SELECT id FROM Parent WHERE id LIKE \'{id}\' ' +
+            'UNION ' +
+            'SELECT id FROM Teacher WHERE id LIKE \'{id}\' ';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {

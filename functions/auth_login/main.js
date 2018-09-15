@@ -16,6 +16,33 @@ exports.handle = function (e, ctx, cb) {
     check();
 
     function check() {
+        let sql = 'SELECT parent_id FROM Parent WHERE id LIKE \'{id}\' AND password LIKE \'{password}\'';
+        sql = sql.format(params);
+
+        conn.query(sql, [], function (err, results, fields) {
+            if (err) {
+                response.end(cb, 500, err, conn);
+                return;
+            }
+
+            console.log(results);
+            if (results.length === 0) {
+                check2();
+            } else {
+                const parent_id = results[0]['parent_id'];
+                const access_token = jwt.generate_token({ parent_id: parent_id });
+                const payload = {
+                    access_token: access_token,
+                    parent_id: parent_id,
+                    is_teacher: false
+                };
+
+                response.end(cb, 200, payload, conn);
+            }
+        });
+    }
+
+    function check2() {
         let sql = 'SELECT teacher_id FROM Teacher WHERE id LIKE \'{id}\' AND password LIKE \'{password}\'';
         sql = sql.format(params);
 
@@ -30,7 +57,11 @@ exports.handle = function (e, ctx, cb) {
             } else {
                 const teacher_id = results[0]['teacher_id'];
                 const access_token = jwt.generate_token({ teacher_id: teacher_id });
-                const payload = { access_token: access_token, teacher_id: teacher_id };
+                const payload = {
+                    access_token: access_token,
+                    teacher_id: teacher_id,
+                    is_teacher: true
+                };
 
                 response.end(cb, 200, payload, conn);
             }
