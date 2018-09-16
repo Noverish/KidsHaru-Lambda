@@ -13,7 +13,7 @@ exports.handle = function (e, ctx, cb) {
     get();
 
     function get() {
-        let sql = 'SELECT * FROM Face WHERE album_id = \'{album_id}\' AND picture_id = \'{picture_id}\' AND child_id = \'{child_id}\'';
+        let sql = 'SELECT * FROM ViewFace WHERE album_id = \'{album_id}\' AND picture_id = \'{picture_id}\' AND child_id = \'{child_id}\'';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {
