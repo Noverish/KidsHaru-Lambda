@@ -6,14 +6,14 @@ format.extend(String.prototype);
 
 exports.handle = function (e, ctx, cb) {
     const conn = mysql.createConnection(utils.mysql_config);
-    const params = utils.process_input_event(e, cb, ['album_id', 'picture_id', 'child_id']);
+    const params = utils.process_input_event(e, cb, ['face_id']);
     if (params == null)
         return;
 
     get();
 
     function get() {
-        let sql = 'SELECT * FROM ViewFace WHERE album_id = \'{album_id}\' AND picture_id = \'{picture_id}\' AND child_id = \'{child_id}\'';
+        let sql = 'SELECT * FROM ViewFace WHERE face_id = \'{face_id}\'';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {

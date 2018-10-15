@@ -17,11 +17,9 @@ exports.process_picture = function (picture) {
     return picture;
 };
 
-exports.check_picture_exist = function (album_id, picture_id, conn, cb, callback) {
-    let sql =
-        'SELECT album_id, picture_id FROM Picture ' +
-        'WHERE album_id = \'{}\' AND picture_id = \'{}\'';
-    sql = sql.format(album_id, picture_id);
+exports.check_picture_exist = function (picture_id, conn, cb, callback) {
+    let sql = 'SELECT picture_id FROM Picture WHERE picture_id = \'{}\'';
+    sql = sql.format(picture_id);
 
     conn.query(sql, [], function (err, results, fields) {
         if (err) {

@@ -34,13 +34,6 @@ exports.integrate_params = function (e) {
     let query = e['queryStringParameters'];
     let path = e['pathParameters'];
 
-    if (body != null && path != null) {
-        if (body.hasOwnProperty('child_id') && path.hasOwnProperty('child_id')) {
-            body['new_child_id'] = body['child_id'];
-            delete body['child_id']
-        }
-    }
-
     let params = {};
     try {
         Object.assign(params, body);

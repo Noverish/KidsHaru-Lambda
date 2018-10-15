@@ -1,10 +1,8 @@
 const response = require('./response.js');
 
-exports.check_face_exist = function (album_id, picture_id, child_id, conn, cb, callback) {
-    let sql =
-        'SELECT album_id, picture_id, child_id FROM Face ' +
-        'WHERE album_id = \'{}\' AND picture_id = \'{}\' AND child_id = \'{}\'';
-    sql = sql.format(album_id, picture_id, child_id);
+exports.check_face_exist = function (face_id, conn, cb, callback) {
+    let sql = 'SELECT face_id FROM Face WHERE face_id = \'{}\'';
+    sql = sql.format(face_id);
 
     conn.query(sql, [], function (err, results, fields) {
         if (err) {
@@ -13,9 +11,9 @@ exports.check_face_exist = function (album_id, picture_id, child_id, conn, cb, c
         }
 
         if (results.length === 0) {
-            callback(false);
+            response.end(cb, 404, null, conn);
         } else {
-            callback(true);
+            callback();
         }
     });
 };

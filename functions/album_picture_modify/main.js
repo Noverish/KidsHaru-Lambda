@@ -7,11 +7,11 @@ format.extend(String.prototype);
 
 exports.handle = function (e, ctx, cb) {
     const conn = mysql.createConnection(utils.mysql_config);
-    const params = utils.process_input_event(e, cb, ['album_id', 'picture_id']);
+    const params = utils.process_input_event(e, cb, ['picture_id']);
     if (params == null)
         return;
 
-    picture_util.check_picture_exist(params['album_id'], params['picture_id'], conn, cb, function () {
+    picture_util.check_picture_exist(params['picture_id'], conn, cb, function () {
         update();
     });
 
@@ -29,7 +29,7 @@ exports.handle = function (e, ctx, cb) {
             return;
         }
 
-        let sql = 'UPDATE Picture SET {0} WHERE album_id = \'{1.album_id}\' AND picture_id = \'{1.picture_id}\'';
+        let sql = 'UPDATE Picture SET {0} WHERE picture_id = \'{1.picture_id}\'';
         sql = sql.format(sql_parts.join(), params);
 
         conn.query(sql, [], function (err, results, fields) {

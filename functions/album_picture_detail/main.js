@@ -7,14 +7,14 @@ format.extend(String.prototype);
 
 exports.handle = function (e, ctx, cb) {
     const conn = mysql.createConnection(utils.mysql_config);
-    const params = utils.process_input_event(e, cb, ['album_id', 'picture_id']);
+    const params = utils.process_input_event(e, cb, ['picture_id']);
     if (params == null)
         return;
 
     get();
 
     function get() {
-        let sql = 'SELECT * FROM Picture WHERE album_id = \'{album_id}\' AND picture_id = \'{picture_id}\'';
+        let sql = 'SELECT * FROM ViewPicture WHERE picture_id = \'{picture_id}\'';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {

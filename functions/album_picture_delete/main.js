@@ -7,30 +7,16 @@ format.extend(String.prototype);
 
 exports.handle = function (e, ctx, cb) {
     const conn = mysql.createConnection(utils.mysql_config);
-    const params = utils.process_input_event(e, cb, ['album_id', 'picture_id']);
+    const params = utils.process_input_event(e, cb, ['picture_id']);
     if (params == null)
         return;
 
-    picture_util.check_picture_exist(params['album_id'], params['picture_id'], conn, cb, function() {
+    picture_util.check_picture_exist(params['picture_id'], conn, cb, function() {
         del1();
     });
 
     function del1() {
-        let sql = 'DELETE FROM Face WHERE album_id = \'{album_id}\' AND picture_id = \'{picture_id}\'';
-        sql = sql.format(params);
-
-        conn.query(sql, [], function (err, results, fields) {
-            if (err) {
-                response.end(cb, 500, err, conn);
-                return;
-            }
-
-            del2();
-        });
-    }
-
-    function del2() {
-        let sql = 'DELETE FROM Picture WHERE album_id = \'{album_id}\' AND picture_id = \'{picture_id}\'';
+        let sql = 'UPDATE Picture SET disable = 1 WHERE picture_id = \'{picture_id}\'';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {

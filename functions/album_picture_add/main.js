@@ -13,30 +13,11 @@ exports.handle = function (e, ctx, cb) {
         return;
 
     album_util.check_album_exist(params['album_id'], conn, cb, function () {
-        if (params.hasOwnProperty('picture_id')) {
-            insert1();
-        } else {
-            get_max_picture_id();
-        }
+        insert1();
     });
 
-    function get_max_picture_id() {
-        let sql = 'SELECT MAX(picture_id) AS max FROM Picture WHERE album_id = \'{album_id}\'';
-        sql = sql.format(params);
-
-        conn.query(sql, [], function (err, results, fields) {
-            if (err) {
-                response.end(cb, 500, err, conn);
-                return;
-            }
-
-            params.picture_id = results[0]['max'] + 1;
-            insert1();
-        });
-    }
-
     function insert1() {
-        let sql = 'INSERT INTO Picture (album_id, picture_id, file_name) VALUES (\'{album_id}\', \'{picture_id}\', \'{file_name}\')';
+        let sql = 'INSERT INTO Picture (file_name) VALUES (\'{file_name}\')';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {
@@ -50,7 +31,7 @@ exports.handle = function (e, ctx, cb) {
     }
 
     function get_inserted() {
-        let sql = 'SELECT * FROM Picture WHERE album_id = \'{album_id}\' AND picture_id = \'{picture_id}\'';
+        let sql = 'SELECT * FROM Picture WHERE picture_id = LAST_INSERT_ID()';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {
@@ -59,7 +40,21 @@ exports.handle = function (e, ctx, cb) {
                 return;
             }
 
-            let picture = picture_util.process_picture(results[0]);
+            insert2(results[0]);
+        });
+    }
+
+    function insert2(picture) {
+        let sql = 'INSERT INTO Album_Picture (album_id, picture_id) VALUES (\'{0.album_id}\', \'{1.picture_id}\')';
+        sql = sql.format(params, picture);
+
+        conn.query(sql, [], function (err, results, fields) {
+            if (err) {
+                response.end(cb, 500, err, conn);
+                return;
+            }
+
+            picture = picture_util.process_picture(picture);
             response.end(cb, 200, picture, conn);
         });
     }

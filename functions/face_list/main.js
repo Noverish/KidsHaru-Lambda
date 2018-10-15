@@ -7,16 +7,16 @@ format.extend(String.prototype);
 
 exports.handle = function (e, ctx, cb) {
     const conn = mysql.createConnection(utils.mysql_config);
-    const params = utils.process_input_event(e, cb, ['album_id', 'picture_id']);
+    const params = utils.process_input_event(e, cb, ['picture_id']);
     if (params == null)
         return;
 
-    picture_util.check_picture_exist(params['album_id'], params['picture_id'], conn, cb, function () {
+    picture_util.check_picture_exist(params['picture_id'], conn, cb, function () {
         get();
     });
 
     function get() {
-        let sql = 'SELECT * FROM ViewFace WHERE album_id = \'{album_id}\' AND picture_id = \'{picture_id}\'';
+        let sql = 'SELECT * FROM ViewFace WHERE picture_id = \'{picture_id}\'';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {

@@ -25,7 +25,6 @@ exports.handle = function (e, ctx, cb) {
                 return;
             }
 
-            console.log(results);
             if (results.length === 0) {
                 check2();
             } else {

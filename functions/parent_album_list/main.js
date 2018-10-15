@@ -39,7 +39,8 @@ exports.handle = function (e, ctx, cb) {
         let sql=
             'SELECT Album.album_id, Picture.file_name FROM Parent_Album ' +
             'INNER JOIN Album ON Parent_Album.album_id = Album.album_id ' +
-            'INNER JOIN Picture ON Album.album_id = Picture.album_id ' +
+            'INNER JOIN Album_Picture ON Album.album_id = Album_Picture.album_id ' +
+            'INNER JOIN Picture ON Album_Picture.picture_id = Picture.picture_id ' +
             'WHERE Parent_Album.parent_id = \'{parent_id}\'';
         sql = sql.format(params);
 

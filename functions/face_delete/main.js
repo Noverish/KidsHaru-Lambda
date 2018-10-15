@@ -7,21 +7,16 @@ format.extend(String.prototype);
 
 exports.handle = function (e, ctx, cb) {
     const conn = mysql.createConnection(utils.mysql_config);
-    const params = utils.process_input_event(e, cb, ['album_id', 'picture_id']);
+    const params = utils.process_input_event(e, cb, ['face_id']);
     if (params == null)
         return;
 
-    face_util.check_face_exist(params['album_id'], params['picture_id'], params['child_id'], conn, cb, function (is_exist) {
-        if (is_exist)
-            del1();
-        else
-            response.end(cb, 404, null, conn);
+    face_util.check_face_exist(params['face_id'], conn, cb, function () {
+        del1();
     });
 
     function del1() {
-        let sql =
-            'DELETE FROM Face WHERE ' +
-            'album_id = \'{album_id}\' AND picture_id = \'{picture_id}\' AND child_id = \'{child_id}\'';
+        let sql = 'UPDATE Face SET disable = 1 WHERE face_id = {face_id}';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {
