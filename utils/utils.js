@@ -1,10 +1,11 @@
 const response = require('./response.js');
+const credential = require('./credential.js');
 
 exports.mysql_config = {
-    host: 'kidsharu.c1nddfwgbi25.ap-northeast-2.rds.amazonaws.com',
-    user: 'kidsharu',
-    password: 'Kidsharu1!',
-    database: 'kidsharu',
+    host: credential.mysql_host,
+    user: credential.mysql_user,
+    password: credential.mysql_password,
+    database: credential.mysql_database,
     multipleStatements: true,
     typeCast: function (field, next) {
         if (field.type === 'DATETIME' || field.type === 'DATE') {
