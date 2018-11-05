@@ -16,7 +16,21 @@ exports.handle = function (e, ctx, cb) {
     });
 
     function del1() {
-        let sql = 'UPDATE Face SET disable = 1 WHERE face_id = {face_id}';
+        let sql = 'DELETE FROM Picture_Face WHERE face_id = {face_id}';
+        sql = sql.format(params);
+
+        conn.query(sql, [], function (err, results, fields) {
+            if (err) {
+                response.end(cb, 500, err, conn);
+                return;
+            }
+
+            del2();
+        });
+    }
+
+    function del2() {
+        let sql = 'DELETE FROM Face WHERE face_id = {face_id}';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {

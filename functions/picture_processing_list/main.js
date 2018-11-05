@@ -14,7 +14,7 @@ exports.handle = function (e, ctx, cb) {
     get();
 
     function get() {
-        let sql = 'SELECT * FROM Picture WHERE status LIKE \'processing\'';
+        let sql = 'SELECT * FROM ViewPicture WHERE status LIKE \'processing\'';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {

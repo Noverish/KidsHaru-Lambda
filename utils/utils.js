@@ -5,6 +5,7 @@ exports.mysql_config = {
     user: 'kidsharu',
     password: 'Kidsharu1!',
     database: 'kidsharu',
+    multipleStatements: true,
     typeCast: function (field, next) {
         if (field.type === 'DATETIME' || field.type === 'DATE') {
             return field.string();
