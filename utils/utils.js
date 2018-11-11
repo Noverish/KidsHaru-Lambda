@@ -7,6 +7,7 @@ exports.mysql_config = {
     password: credential.mysql_password,
     database: credential.mysql_database,
     multipleStatements: true,
+    connectTimeout: 3000,
     typeCast: function (field, next) {
         if (field.type === 'DATETIME' || field.type === 'DATE') {
             return field.string();

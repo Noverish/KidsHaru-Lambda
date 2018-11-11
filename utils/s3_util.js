@@ -7,15 +7,17 @@ aws.config.update({
 });
 const s3 = new aws.S3();
 
+exports.bucketName = 'kidsharu';
+
 exports.deletePicture = function (albumId, fileName, callback) {
     const params1 = {
-        Bucket: 'kidsharu-album',
-        Key: albumId + '/' + fileName
+        Bucket: exports.bucketName,
+        Key: `album/${albumId}/${fileName}`
     };
 
     const params2 = {
-        Bucket: 'kidsharu-album-thumbnail',
-        Key: albumId + '/' + fileName
+        Bucket: exports.bucketName,
+        Key: `album-thumbnail/${albumId}/${fileName}`
     };
 
     s3.deleteObject(params1, function (err, data) {
@@ -38,12 +40,12 @@ exports.deletePicture = function (albumId, fileName, callback) {
 exports.deleteAlbum = function (albumId, callback) {
     let keys = null;
 
-    getKeys();
+    getKeys1();
 
-    function getKeys() {
+    function getKeys1() {
         const params1 = {
-            Bucket: 'kidsharu-album',
-            Prefix: albumId
+            Bucket: exports.bucketName,
+            Prefix: `album/${albumId}`
         };
 
         s3.listObjectsV2(params1, function (err, data) {
@@ -56,18 +58,13 @@ exports.deleteAlbum = function (albumId, callback) {
                 return { Key: a['Key'] };
             });
 
-            if (keys.length === 0) {
-                callback();
-                return;
-            }
-
             deleteObjects();
         });
     }
 
     function deleteObjects() {
         const params2 = {
-            Bucket: 'kidsharu-album',
+            Bucket: exports.bucketName,
             Delete: {
                 Objects: keys,
                 Quiet: false
@@ -80,13 +77,33 @@ exports.deleteAlbum = function (albumId, callback) {
                 return;
             }
 
+            getKeys2();
+        });
+    }
+
+    function getKeys2() {
+        const params1 = {
+            Bucket: exports.bucketName,
+            Prefix: `album-thumbnail/${albumId}`
+        };
+
+        s3.listObjectsV2(params1, function (err, data) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            keys = data['Contents'].map(function (a) {
+                return { Key: a['Key'] };
+            });
+
             deleteThumbnails();
         });
     }
 
     function deleteThumbnails() {
         const params3 = {
-            Bucket: 'kidsharu-album-thumbnail',
+            Bucket: exports.bucketName,
             Delete: {
                 Objects: keys,
                 Quiet: false

@@ -1,6 +1,7 @@
 const response = require('../../utils/response.js');
 const credential = require('../../utils/credential.js');
 const album_util = require('../../utils/album_util.js');
+const s3Util = require('../../utils/s3_util.js');
 const crypto = require('crypto');
 const aws = require('aws-sdk');
 aws.config.update({
@@ -16,8 +17,8 @@ exports.handle = function (e, ctx, cb) {
     const hash = crypto.createHash('md5').update(buffer.toString()).digest('hex');
 
     let param = {
-        'Bucket': 'kidsharu-album',
-        'Key': album_id + '/' + hash + '.jpg',
+        'Bucket': s3Util.bucketName,
+        'Key': `album/${album_id}/${hash}.jpg`,
         'Body': buffer,
         'ContentType': 'image/jpeg'
     };

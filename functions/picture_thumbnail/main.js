@@ -1,6 +1,7 @@
 const credential = require('../../utils/credential.js');
 const Jimp = require('jimp');
 const aws = require('aws-sdk');
+const s3Util = require('../../utils/s3_util.js');
 aws.config.update({
     accessKeyId: credential.access_key_id,
     secretAccessKey: credential.secret_key_id,
@@ -9,13 +10,19 @@ aws.config.update({
 const s3 = new aws.S3();
 
 exports.handle = (event, context, callback) => {
-    const bucket = 'kidsharu-album';
     const key = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '));
+    const folderName = key.split("/")[0];
+
+    if (folderName === "album") {
+        load();
+    } else {
+        callback(null, null);
+    }
 
     function load() {
         return new Promise(function (resolve, reject) {
             const param = {
-                'Bucket': bucket,
+                'Bucket': s3Util.bucketName,
                 'Key': key
             };
 
@@ -44,8 +51,8 @@ exports.handle = (event, context, callback) => {
     function upload(buffer) {
         return new Promise(function (resolve, reject) {
             const param = {
-                'Bucket': 'kidsharu-album-thumbnail',
-                'Key': key,
+                'Bucket': s3Util.bucketName,
+                'Key': key.replace("album/", "album-thumbnail/"),
                 'Body': buffer,
                 'ContentType': 'image/jpeg'
             };
