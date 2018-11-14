@@ -18,8 +18,8 @@ exports.handle = function (e, ctx, cb) {
     function update() {
         let sql_parts = [];
 
-        if (params.hasOwnProperty('child_id'))
-            sql_parts.push('child_id = \'{child_id}\''.format(params));
+        if (params.hasOwnProperty('cluster_id'))
+            sql_parts.push('cluster_id = \'{cluster_id}\''.format(params));
 
         if (params.hasOwnProperty('rect_x'))
             sql_parts.push('rect_x = \'{rect_x}\''.format(params));

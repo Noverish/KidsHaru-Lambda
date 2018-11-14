@@ -11,8 +11,8 @@ exports.handle = function (e, ctx, cb) {
     if (params == null)
         return;
 
-    if(!params.hasOwnProperty('child_id')) {
-        params['child_id'] = 'NULL';
+    if(!params.hasOwnProperty('cluster_id')) {
+        params['cluster_id'] = 'NULL';
     }
 
     picture_util.check_picture_exist(params['picture_id'], conn, cb, function () {
@@ -21,8 +21,8 @@ exports.handle = function (e, ctx, cb) {
 
     function insert1() {
         let sql =
-            'INSERT INTO Face (child_id, rect_x, rect_y, rect_width, rect_height) ' +
-            'VALUES ({child_id}, \'{rect_x}\', \'{rect_y}\', \'{rect_width}\', \'{rect_height}\')';
+            'INSERT INTO Face (cluster_id, rect_x, rect_y, rect_width, rect_height) ' +
+            'VALUES ({cluster_id}, \'{rect_x}\', \'{rect_y}\', \'{rect_width}\', \'{rect_height}\')';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {
