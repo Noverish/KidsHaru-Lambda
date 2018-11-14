@@ -22,8 +22,7 @@ exports.process_album = function (album) {
 };
 
 exports.check_album_exist = function (album_id, conn, cb, callback) {
-    let sql = 'SELECT album_id FROM Album WHERE album_id = \'{}\'';
-    sql = sql.format(album_id);
+    let sql = `SELECT album_id FROM Album WHERE album_id = '${album_id}'`;
 
     conn.query(sql, [], function (err, results, fields) {
         if (err) {

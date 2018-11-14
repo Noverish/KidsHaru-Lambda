@@ -10,7 +10,7 @@ exports.process_picture_list = function (picture_list) {
 };
 
 exports.process_picture = function (picture) {
-    picture.picture_url = album_util.album_bucket_path + '/' + picture['album_id'] + '/' + picture['file_name'];
+    picture.picture_url = `${album_util.album_bucket_path}/${picture['album_id']}/${picture['file_name']}`;
 
     delete picture['file_name'];
 
@@ -18,8 +18,7 @@ exports.process_picture = function (picture) {
 };
 
 exports.check_picture_exist = function (picture_id, conn, cb, callback) {
-    let sql = 'SELECT picture_id FROM Picture WHERE picture_id = \'{}\'';
-    sql = sql.format(picture_id);
+    let sql = `SELECT picture_id FROM Picture WHERE picture_id = '${picture_id}'`;
 
     conn.query(sql, [], function (err, results, fields) {
         if (err) {

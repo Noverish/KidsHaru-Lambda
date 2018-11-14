@@ -1,8 +1,7 @@
 const response = require('./response.js');
 
 exports.check_face_exist = function (face_id, conn, cb, callback) {
-    let sql = 'SELECT face_id FROM Face WHERE face_id = \'{}\'';
-    sql = sql.format(face_id);
+    let sql = `SELECT face_id FROM Face WHERE face_id = '${face_id}'`;
 
     conn.query(sql, [], function (err, results, fields) {
         if (err) {

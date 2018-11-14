@@ -15,15 +15,14 @@ exports.process_child = function (child) {
     if (child['profile_img'] == null) {
         child['profile_img'] = exports.child_noprofile_path
     } else {
-        child['profile_img'] = exports.child_bucket_path + '/' + child['child_id'] + '/' + child['profile_img'];
+        child['profile_img'] = `${exports.child_bucket_path}/${child['child_id']}/${child['profile_img']}`;
     }
 
     return child;
 };
 
 exports.check_child_exist = function (child_id, conn, cb, callback) {
-    let sql = 'SELECT child_id FROM Child WHERE child_id = \'{}\'';
-    sql = sql.format(child_id);
+    let sql = `SELECT child_id FROM Child WHERE child_id = '${child_id}'`;
 
     conn.query(sql, [], function (err, results, fields) {
         if (err) {

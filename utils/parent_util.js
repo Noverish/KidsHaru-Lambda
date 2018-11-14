@@ -1,8 +1,7 @@
 const response = require('./response.js');
 
 exports.check_parent_exist = function (parent_id, conn, cb, callback) {
-    let sql = 'SELECT parent_id FROM Parent WHERE parent_id = \'{}\'';
-    sql = sql.format(parent_id);
+    let sql = `SELECT parent_id FROM Parent WHERE parent_id = '${parent_id}'`;
 
     conn.query(sql, [], function (err, results, fields) {
         if (err) {
