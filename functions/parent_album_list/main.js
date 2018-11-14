@@ -18,11 +18,7 @@ exports.handle = function (e, ctx, cb) {
     });
 
     function get() {
-        let sql =
-            'SELECT Album.* FROM Parent_Album ' +
-            'INNER JOIN Album ON Parent_Album.album_id = Album.album_id ' +
-            'WHERE Parent_Album.parent_id = \'{parent_id}\'';
-        sql = sql.format(params);
+        let sql = `SELECT * FROM ViewParentAlbum WHERE parent_id = ${params.parent_id}`;
 
         conn.query(sql, [], function (err, results, fields) {
             if (err) {

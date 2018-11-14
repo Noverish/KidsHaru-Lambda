@@ -18,11 +18,7 @@ exports.handle = function (e, ctx, cb) {
     });
 
     function get() {
-        let sql =
-            'SELECT Album.* FROM Teacher_Album ' +
-            'INNER JOIN Album ON Teacher_Album.album_id = Album.album_id ' +
-            'WHERE Teacher_Album.teacher_id = \'{teacher_id}\'';
-        sql = sql.format(params);
+        let sql = `SELECT * FROM ViewTeacherAlbum WHERE teacher_id = ${params.teacher_id}`;
 
         conn.query(sql, [], function (err, results, fields) {
             if (err) {

@@ -17,11 +17,7 @@ exports.handle = function (e, ctx, cb) {
     });
 
     function get() {
-        let sql =
-            'SELECT Child.* FROM Teacher_Child ' +
-            'INNER JOIN Child ON Teacher_Child.child_id = Child.child_id ' +
-            'WHERE Teacher_Child.teacher_id = \'{teacher_id}\'';
-        sql = sql.format(params);
+        let sql = `SELECT * FROM ViewTeacherChild WHERE teacher_id = ${params.teacher_id}`;
 
         conn.query(sql, [], function (err, results, fields) {
             if (err) {
