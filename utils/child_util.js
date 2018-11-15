@@ -1,7 +1,7 @@
 const response = require('./response.js');
 
-exports.child_bucket_path = 'https://s3.ap-northeast-2.amazonaws.com/kidsharu-child';
-exports.child_noprofile_path = 'https://s3.ap-northeast-2.amazonaws.com/kidsharu-child/no-profile.jpg';
+exports.child_bucket_path = 'https://s3.ap-northeast-2.amazonaws.com/kidsharu/child';
+exports.child_noprofile_path = 'https://s3.ap-northeast-2.amazonaws.com/kidsharu/child/no-profile.jpg';
 
 exports.process_child_list = function (child_list) {
     for (let i = 0; i < child_list.length; i++) {

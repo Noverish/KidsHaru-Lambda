@@ -14,6 +14,7 @@ exports.handle = function (e, ctx, cb) {
     let sql = `
         TRUNCATE Face;
         TRUNCATE Picture_Face;
+        TRUNCATE Cluster_Child;
         UPDATE Picture SET status = 'processing';
     `;
 
