@@ -14,7 +14,12 @@ exports.handle = function (e, ctx, cb) {
     get();
 
     function get() {
-        let sql = 'SELECT * FROM ViewPicture WHERE status LIKE \'processing\'';
+        let sql = `
+            SELECT ViewPicture.* FROM ViewPicture
+            JOIN Album_Picture ON Album_Picture.picture_id = ViewPicture.picture_id
+            JOIN Album ON Album.album_id = Album_Picture.album_id
+            WHERE ViewPicture.status LIKE 'processing' AND Album.status LIKE 'processing';
+        `;
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {

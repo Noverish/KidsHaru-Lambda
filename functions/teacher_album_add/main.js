@@ -31,7 +31,7 @@ exports.handle = function (e, ctx, cb) {
     }
 
     function get_inserted() {
-        let sql = 'SELECT * FROM Album WHERE album_id = LAST_INSERT_ID()';
+        let sql = 'SELECT * FROM ViewAlbum WHERE album_id = LAST_INSERT_ID()';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {

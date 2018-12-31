@@ -14,7 +14,7 @@ exports.handle = function (e, ctx, cb) {
     get();
 
     function get() {
-        let sql = 'SELECT * FROM Album WHERE album_id = \'{album_id}\'';
+        let sql = 'SELECT * FROM ViewAlbum WHERE album_id = \'{album_id}\'';
         sql = sql.format(params);
 
         conn.query(sql, [], function (err, results, fields) {

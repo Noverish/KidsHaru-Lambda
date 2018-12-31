@@ -15,6 +15,10 @@ exports.handle = function (e, ctx, cb) {
         params['cluster_id'] = 'NULL';
     }
 
+    if(params['cluster_id'] === '-1') {
+        params['cluster_id'] = 'NULL';
+    }
+
     picture_util.check_picture_exist(params['picture_id'], conn, cb, function () {
         insert1();
     });
